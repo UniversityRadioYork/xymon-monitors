@@ -1,0 +1,4 @@
+*.pyc
+build/
+dist/
+xymon_monitors.egg-info
