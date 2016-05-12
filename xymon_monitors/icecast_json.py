@@ -4,18 +4,17 @@
 def main():
         import urllib.request
         import json
+        import xymon_monitors.logging
         import logging
 
-        logging.basicConfig(level=logging.INFO,
-                            filename='/var/log/xymon/icecast_json.log',
-                            filemode='w',
-                            format='%(asctime)s:%(name)s:%(levelname)s:%(message)s')
+        xymon_monitors.logging.configure('icecast_json')
+        l = logging.getLogger()
 
         error = False
         try:
                 r = urllib.request.urlopen("https://ury.org.uk/audio/json2.xsl").read()
         except:
-                logging.exception('Icecast JSON unavailable')
+                l.exception('Icecast JSON unavailable')
                 error = True
 
         try:
@@ -23,11 +22,11 @@ def main():
         except NameError:  # Skip
                 pass
         except:
-                logging.exception('Could not parse Icecast JSON')
+                l.exception('Could not parse Icecast JSON')
                 error = True
 
         if not error:
-                logging.info('SUCCESS:Icecast JSON working')
+                l.info('SUCCESS:Icecast JSON working')
 
 if __name__ == '__main__':
         main()
