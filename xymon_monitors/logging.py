@@ -23,17 +23,18 @@ def getLogPath(logname):
 
 
 def exception_quit(logger, ex, error_string):
-        def pawrappa(func):
-                def wrapper(*args, **kw):
-                        error = False
-                        try:
-                                func(*args, **kw)
-                        except ex:
-                                error = True
-                                logger.exception('Known exception thrown')  # Print exception before our own line (for Xymon to read)
+    def pawrappa(func):
+        def wrapper(*args, **kw):
+            error = False
+            try:
+                func(*args, **kw)
+            except ex:
+                error = True
+                # Print exception before our own line (for Xymon to read)
+                logger.exception('Known exception thrown')
 
-                        if error:
-                                logger.error(error_string)
-                                sys.exit(1)
-                return wrapper
-        return pawrappa
+            if error:
+                logger.error(error_string)
+                sys.exit(1)
+        return wrapper
+    return pawrappa
