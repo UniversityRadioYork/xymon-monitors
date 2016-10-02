@@ -16,7 +16,7 @@ def get_HTTP(url):
 @xm_logging.exception_quit(l, Exception, 'Could not parse Icecast JSON')
 def parse_json(s):
     try:
-        json.loads(str(r, 'utf-8').replace('\\n', '\n'))
+        json.loads(str(s, 'utf-8'))
     except NameError:
         pass  # Skip
 

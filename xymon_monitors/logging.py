@@ -27,7 +27,7 @@ def exception_quit(logger, ex, error_string):
         def wrapper(*args, **kw):
             error = False
             try:
-                func(*args, **kw)
+                r = func(*args, **kw)
             except ex:
                 error = True
                 # Print exception before our own line (for Xymon to read)
@@ -36,5 +36,7 @@ def exception_quit(logger, ex, error_string):
             if error:
                 logger.error(error_string)
                 sys.exit(1)
+            else:
+                return r
         return wrapper
     return pawrappa
