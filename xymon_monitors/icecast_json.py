@@ -12,7 +12,7 @@ def main():
 
         error = False
         try:
-                r = urllib.request.urlopen("https://ury.org.uk/audio/json2.xsl").read()
+                r = urllib.request.urlopen("https://ury.org.uk/audio/status-json.xsl").read()
         except:
                 l.exception('Icecast JSON unavailable')
                 error = True
