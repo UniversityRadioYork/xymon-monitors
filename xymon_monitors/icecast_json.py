@@ -1,32 +1,33 @@
 #!/usr/bin/env python3
+import logging
+import xymon_monitors.logging as xm_logging
+import urllib.request
+import json
+
+l = logging.getLogger()
+xm_logging.configure('icecast_json')
 
 
-def main():
-        import urllib.request
-        import json
-        import xymon_monitors.logging
-        import logging
+@xm_logging.exception_quit(l, Exception, 'Icecast JSON unavailable')
+def get_HTTP(url):
+        return urllib.request.urlopen(url).read()
 
-        xymon_monitors.logging.configure('icecast_json')
-        l = logging.getLogger()
 
-        error = False
-        try:
-                r = urllib.request.urlopen("https://ury.org.uk/audio/status-json.xsl").read()
-        except:
-                l.exception('Icecast JSON unavailable')
-                error = True
-
+@xm_logging.exception_quit(l, Exception, 'Could not parse Icecast JSON')
+def parse_json(s):
         try:
                 json.loads(str(r, 'utf-8').replace('\\n', '\n'))
-        except NameError:  # Skip
-                pass
-        except:
-                l.exception('Could not parse Icecast JSON')
-                error = True
+        except NameError:
+                pass  # Skip
 
-        if not error:
-                l.info('SUCCESS:Icecast JSON working')
+
+@xm_logging.exception_quit(l, Exception, 'Unknown exception thrown')
+def main():
+        r = get_HTTP('https://ury.org.uk/audio/status-json.xsl')
+        parse_json(r)
+
+        l.info('SUCCESS:Icecast JSON working')
+
 
 if __name__ == '__main__':
         main()
